@@ -1,0 +1,45 @@
+{
+  "info": {
+    "name": "Users and Orders microservices",
+    "description": "API smoke and integration scenarios for KT2. Start users on port 8001 and orders on port 8002.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "users_url", "value": "http://localhost:8001" },
+    { "key": "orders_url", "value": "http://localhost:8002" },
+    { "key": "user_id", "value": "" },
+    { "key": "order_id", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Users service",
+      "item": [
+        {
+          "name": "Create user",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('created', () => pm.response.to.have.status(201));", "pm.collectionVariables.set('user_id', pm.response.json().id);"] } }],
+          "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"name\": \"Алексей\",\n  \"email\": \"alex@example.test\"\n}", "options": { "raw": { "language": "json" } } }, "url": "{{users_url}}/users" }
+        },
+        {
+          "name": "Get user",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('user found', () => pm.response.to.have.status(200));"] } }],
+          "request": { "method": "GET", "url": "{{users_url}}/users/{{user_id}}" }
+        }
+      ]
+    },
+    {
+      "name": "Orders service",
+      "item": [
+        {
+          "name": "Create order and fetch user",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('order created with user data', () => { pm.response.to.have.status(201); pm.expect(pm.response.json().user.id).to.eql(pm.collectionVariables.get('user_id')); });", "pm.collectionVariables.set('order_id', pm.response.json().id);"] } }],
+          "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"user_id\": \"{{user_id}}\",\n  \"item\": \"Книга\",\n  \"quantity\": 2\n}", "options": { "raw": { "language": "json" } } }, "url": "{{orders_url}}/orders" }
+        },
+        {
+          "name": "Get order",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('order found', () => pm.response.to.have.status(200));"] } }],
+          "request": { "method": "GET", "url": "{{orders_url}}/orders/{{order_id}}" }
+        }
+      ]
+    }
+  ]
+}

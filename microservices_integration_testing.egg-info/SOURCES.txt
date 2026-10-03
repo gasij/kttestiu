@@ -1,0 +1,15 @@
+README.md
+pyproject.toml
+microservices_integration_testing.egg-info/PKG-INFO
+microservices_integration_testing.egg-info/SOURCES.txt
+microservices_integration_testing.egg-info/dependency_links.txt
+microservices_integration_testing.egg-info/requires.txt
+microservices_integration_testing.egg-info/top_level.txt
+services/orders/app/main.py
+services/orders/app/repository.py
+services/orders/app/schemas.py
+services/orders/app/user_client.py
+services/users/app/main.py
+services/users/app/repository.py
+services/users/app/schemas.py
+tests/test_microservices_integration.py
